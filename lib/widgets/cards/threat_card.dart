@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/colors.dart';
+import '../../services/app_service.dart';
 
 class ThreatCard extends StatefulWidget {
   const ThreatCard({super.key});
@@ -14,28 +15,37 @@ class _ThreatCardState extends State<ThreatCard> {
   String risk = "Low Risk";
   Color riskColor = Colors.green;
 
-  void analyzeThreat() {
-    String text = controller.text.toLowerCase();
+  bool isLoading = false;
 
-    if (text.contains("help") ||
-        text.contains("danger") ||
-        text.contains("attack") ||
-        text.contains("follow") ||
-        text.contains("threat") ||
-        text.contains("harass")) {
-      setState(() {
-        risk = "High Risk";
-        riskColor = Colors.red;
-      });
-    } else if (text.isEmpty) {
+  Future<void> analyzeThreat() async {
+    String text = controller.text;
+    if (text.isEmpty) {
       setState(() {
         risk = "Low Risk";
         riskColor = Colors.green;
       });
-    } else {
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final response = await AppService.analyzeThreat(text);
       setState(() {
-        risk = "Medium Risk";
-        riskColor = Colors.orange;
+        risk = response.riskLevel;
+        if (response.color == 'red') riskColor = Colors.red;
+        else if (response.color == 'orange') riskColor = Colors.orange;
+        else riskColor = Colors.green;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to analyze threat: $e')),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
       });
     }
   }
@@ -124,11 +134,13 @@ class _ThreatCardState extends State<ThreatCard> {
                   borderRadius: BorderRadius.circular(18),
                 ),
               ),
-              onPressed: analyzeThreat,
-              icon: const Icon(Icons.search),
-              label: const Text(
-                "Analyze Threat Pattern",
-                style: TextStyle(
+              onPressed: isLoading ? null : analyzeThreat,
+              icon: isLoading 
+                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                  : const Icon(Icons.search),
+              label: Text(
+                isLoading ? "Analyzing..." : "Analyze Threat Pattern",
+                style: const TextStyle(
                   fontSize: 18,
                 ),
               ),

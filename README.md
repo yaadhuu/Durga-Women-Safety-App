@@ -172,55 +172,59 @@ Packages used
 
 # 🚀 Installation
 
-Clone the repository
+### Frontend (Flutter App)
 
-```bash
-git clone https://github.com/arunkuttiyadan/durga-safeconnect.git
-```
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yaadhuu/Durga-Women-Safety-App.git
+   ```
+2. Go to project directory:
+   ```bash
+   cd Durga-Women-Safety-App
+   ```
+3. Install dependencies:
+   ```bash
+   flutter pub get
+   ```
+4. Run the application:
+   ```bash
+   flutter run
+   ```
 
-Go to project directory
+### Backend (FastAPI API Server)
 
-```bash
-cd durga-safeconnect
-```
+The backend code is located inside the `/backend` folder.
 
-Install dependencies
-
-```bash
-flutter pub get
-```
-
-Run the application
-
-```bash
-flutter run
-```
+1. Go to the backend folder:
+   ```bash
+   cd backend
+   ```
+2. Make sure you copy `.env.example` to `.env` and fill in the necessary keys.
+3. Start the containers (PostgreSQL database + Python FastAPI app) using Docker Compose:
+   ```bash
+   docker compose up -d --build
+   ```
+4. Run database migrations:
+   ```bash
+   alembic upgrade head
+   ```
 
 ---
 
 # 📦 Requirements
 
-- Flutter 3.x
-- Dart SDK 3.x
-- Android Studio / VS Code
-- Android SDK
+* **Frontend:** Flutter SDK 3.x, Dart SDK 3.x
+* **Backend:** Python 3.12+, Docker Desktop (for Postgres database)
 
 ---
 
 # 📌 Future Improvements
 
-- SMS API Integration
-- Real-time Location Sharing
-- Firebase Authentication
-- Cloud Firestore
-- Push Notifications
-- Voice Activated SOS
-- Shake Detection
-- Fake Call Feature
-- Nearby Police Stations
-- Offline Emergency Mode
-- Emergency Audio Recording
-- AI Threat Prediction using Machine Learning
+* **Phase 3 Frontend Integration:** Complete wiring up the remaining UI screens to talk to the new FastAPI endpoints (In Progress).
+* **Native FCM Push Alerts:** Add Firebase setup to broadcast SOS notifications to emergency contacts (Planned).
+* **Cloud Evidence Storage:** Store uploaded audio/video clips securely on AWS S3 or Google Cloud (Planned).
+* **Rate Limiting & Abuse Prevention:** Implement brute-force protection on the Login and SOS endpoints.
+* **Offline Emergency Mode:** Allow triggering local SMS fallback if the network is disconnected.
 
 ---
 
