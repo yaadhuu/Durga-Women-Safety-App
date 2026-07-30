@@ -193,6 +193,14 @@ Packages used
 
 ### Backend (FastAPI API Server)
 
+### Quick Start (Local, No Docker)
+1. **One-time Setup:** Create local Postgres DB `durga_db` and copy `backend/.env.example` to `backend/.env` (see [LOCAL_SETUP.md](LOCAL_SETUP.md) for full guide).
+2. **Everyday Run (Choose one):**
+   - **VS Code:** Press `Ctrl+Shift+P` (or `Cmd+Shift+P`) ➔ **Tasks: Run Task** ➔ **Start Everything**.
+   - **CLI (Two Terminals):**
+     - Terminal 1 (Backend): `backend/run_local.sh` (or `backend\run_local.bat` on Windows)
+     - Terminal 2 (Frontend): `scripts/run_frontend.sh` (or `scripts\run_frontend.bat` on Windows)
+
 The backend code is located inside the `/backend` folder.
 
 1. Go to the backend folder:

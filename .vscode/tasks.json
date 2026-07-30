@@ -1,0 +1,51 @@
+{
+  // ==============================================================================
+  // DURGA Safety App - VS Code Task Configuration
+  // ------------------------------------------------------------------------------
+  // How to run:
+  //   1. Press Cmd+Shift+P (macOS) or Ctrl+Shift+P (Windows/Linux)
+  //   2. Type/select: "Tasks: Run Task"
+  //   3. Select: "Start Everything" (or "Start Backend" / "Start Frontend")
+  // ==============================================================================
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Backend",
+      "type": "shell",
+      "command": "bash backend/run_local.sh",
+      "windows": {
+        "command": "backend\\run_local.bat"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": false
+      }
+    },
+    {
+      "label": "Start Frontend",
+      "type": "shell",
+      "command": "bash scripts/run_frontend.sh",
+      "windows": {
+        "command": "scripts\\run_frontend.bat"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": false
+      }
+    },
+    {
+      "label": "Start Everything",
+      "dependsOn": [
+        "Start Backend",
+        "Start Frontend"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    }
+  ]
+}
