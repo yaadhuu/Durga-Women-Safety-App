@@ -59,7 +59,11 @@ rem ----------------------------------------------------------------------------
 echo [+] Running Alembic database migrations (alembic upgrade head)...
 alembic upgrade head
 if errorlevel 1 (
-    echo [!] ERROR: Alembic database migration failed.
+    echo.
+    echo [!] ERROR: Database migration / connection failed.
+    echo [!] If you are running locally without PostgreSQL running on port 5432:
+    echo [!] Set DATABASE_URL=sqlite:///./test.db inside backend\.env
+    echo.
     exit /b 1
 )
 

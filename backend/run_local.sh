@@ -52,7 +52,14 @@ echo "[+] backend/.env verified."
 # Apply all pending Alembic database migrations to head.
 # ------------------------------------------------------------------------------
 echo "[+] Running Alembic database migrations (alembic upgrade head)..."
-alembic upgrade head
+if ! alembic upgrade head; then
+    echo ""
+    echo "[!] ERROR: Database migration / connection failed."
+    echo "[!] If you are running locally without PostgreSQL running on port 5432:"
+    echo "[!] Set DATABASE_URL=sqlite:///./test.db inside backend/.env"
+    echo ""
+    exit 1
+fi
 
 # ------------------------------------------------------------------------------
 # Step 4: Start FastAPI Backend Server
