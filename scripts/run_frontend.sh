@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==============================================================================
 # DURGA Safety App - Frontend Local Startup Script (Linux / macOS)
-# Installs dependencies, lists devices, prompts target & LAN IP, and runs Flutter.
+# Multi-device runner for Android Emulator, iOS Simulator, and Physical Phones.
 # ==============================================================================
 
 set -e
@@ -11,14 +11,12 @@ cd "$(dirname "$0")/.."
 
 # ------------------------------------------------------------------------------
 # Step 1: Fetch Flutter Dependencies
-# Runs flutter pub get to ensure all packages are up to date.
 # ------------------------------------------------------------------------------
 echo "[+] Running flutter pub get..."
 flutter pub get
 
 # ------------------------------------------------------------------------------
 # Step 2: List Available Devices
-# Print available emulators and connected physical devices.
 # ------------------------------------------------------------------------------
 echo ""
 echo "[+] Available Flutter Devices:"
@@ -28,45 +26,48 @@ echo "--------------------------------------------------"
 echo ""
 
 # ------------------------------------------------------------------------------
-# Step 3: Prompt User for Target Device & Network Configuration
-# Ask for device ID and whether target is a physical device (requires LAN IP).
+# Step 3: Prompt User for Target Device & Device Type Selection
 # ------------------------------------------------------------------------------
 read -p "Enter target device ID (or press Enter for default): " DEVICE_ID
-read -p "Are you deploying to a physical device? (y/N): " IS_PHYSICAL
+
+echo ""
+echo "Select target device environment:"
+echo "  1) Android Emulator (Default: http://10.0.2.2:8000/api/v1)"
+echo "  2) iOS Simulator / Local Desktop (Default: http://127.0.0.1:8000/api/v1)"
+echo "  3) Physical Phone (Requires computer's LAN IP address)"
+read -p "Enter choice [1-3] (Default: 1): " DEV_TYPE
 
 EXTRA_ARGS=""
 
-if [[ "$IS_PHYSICAL" =~ ^[Yy]$ ]]; then
-    read -p "Enter your computer's LAN IP address (e.g., 192.168.1.100): " LAN_IP
-    if [ -n "$LAN_IP" ]; then
-        EXTRA_ARGS="--dart-define=API_BASE_URL=http://${LAN_IP}:8000/api/v1"
-        echo "[+] Configured custom API base URL for physical device: http://${LAN_IP}:8000/api/v1"
-    else
-        echo "[!] No IP provided. Using default API base URL."
-    fi
-else
-    echo "[+] Using default API base URL (Android emulator 10.0.2.2 / localhost)."
-fi
+case "$DEV_TYPE" in
+    2)
+        EXTRA_ARGS="--dart-define=API_BASE_URL=http://127.0.0.1:8000/api/v1"
+        echo "[+] Target environment: iOS Simulator / Desktop (http://127.0.0.1:8000/api/v1)"
+        ;;
+    3)
+        read -p "Enter your computer's LAN IP address (e.g., 192.168.1.100): " LAN_IP
+        if [ -n "$LAN_IP" ]; then
+            EXTRA_ARGS="--dart-define=API_BASE_URL=http://${LAN_IP}:8000/api/v1"
+            echo "[+] Target environment: Physical Phone (http://${LAN_IP}:8000/api/v1)"
+        else
+            echo "[!] No IP provided. Falling back to Android Emulator URL (http://10.0.2.2:8000/api/v1)."
+            EXTRA_ARGS="--dart-define=API_BASE_URL=http://10.0.2.2:8000/api/v1"
+        fi
+        ;;
+    *)
+        EXTRA_ARGS="--dart-define=API_BASE_URL=http://10.0.2.2:8000/api/v1"
+        echo "[+] Target environment: Android Emulator (http://10.0.2.2:8000/api/v1)"
+        ;;
+esac
 
 # ------------------------------------------------------------------------------
 # Step 4: Launch Flutter Application
-# Start flutter run with specified device target and optional dart defines.
 # ------------------------------------------------------------------------------
 echo ""
 if [ -n "$DEVICE_ID" ]; then
-    if [ -n "$EXTRA_ARGS" ]; then
-        echo "[+] Executing: flutter run -d $DEVICE_ID $EXTRA_ARGS"
-        flutter run -d "$DEVICE_ID" "$EXTRA_ARGS"
-    else
-        echo "[+] Executing: flutter run -d $DEVICE_ID"
-        flutter run -d "$DEVICE_ID"
-    fi
+    echo "[+] Executing: flutter run -d $DEVICE_ID $EXTRA_ARGS"
+    flutter run -d "$DEVICE_ID" "$EXTRA_ARGS"
 else
-    if [ -n "$EXTRA_ARGS" ]; then
-        echo "[+] Executing: flutter run $EXTRA_ARGS"
-        flutter run "$EXTRA_ARGS"
-    else
-        echo "[+] Executing: flutter run"
-        flutter run
-    fi
+    echo "[+] Executing: flutter run $EXTRA_ARGS"
+    flutter run "$EXTRA_ARGS"
 fi

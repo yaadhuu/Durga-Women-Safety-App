@@ -1,0 +1,36 @@
+{
+  // ==============================================================================
+  // DURGA Safety App - VS Code Run & Debug Launch Configurations
+  // Select your target platform from the VS Code Debug dropdown (F5)
+  // ==============================================================================
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "DURGA App (Android Emulator)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define=API_BASE_URL=http://10.0.2.2:8000/api/v1"
+      ]
+    },
+    {
+      "name": "DURGA App (iOS Simulator / Desktop / Web)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define=API_BASE_URL=http://127.0.0.1:8000/api/v1"
+      ]
+    },
+    {
+      "name": "DURGA App (Physical Phone - Change IP in args)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define=API_BASE_URL=http://192.168.1.100:8000/api/v1"
+      ]
+    }
+  ]
+}

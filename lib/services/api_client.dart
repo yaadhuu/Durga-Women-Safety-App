@@ -6,8 +6,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class ApiClient {
   static const String _tokenKey = 'jwt_access_token';
 
-  // Change this to your backend URL (Docker: http://10.0.2.2:8000 for Android emulator)
-  static const String baseUrl = 'http://10.0.2.2:8000/api/v1';
+  // Dynamic API base URL: Reads --dart-define=API_BASE_URL=... or defaults to Android emulator URL
+  static const String baseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'http://10.0.2.2:8000/api/v1',
+  );
 
   final Dio dio;
   final FlutterSecureStorage _storage;
